@@ -1,0 +1,65 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Restful webservice with Jersey and Spring and Swagger</display-name>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+	
+	<!-- For support for CORS, as per Swagger github specification -->
+	<!-- This should be used only in worst condition -->
+	<filter>
+		<filter-name>ApiOriginFilter</filter-name>
+		<filter-class>com.ddlab.rnd.rest.filter.ApiOriginFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>ApiOriginFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>com.ddlab.rest.resources.ApplicationPkgs</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>
+				com.ddlab.rnd.rest.resources.ApplicationPkgs
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- Changes for Swagger docs -->
+	<servlet>
+		<servlet-name>Jersey2Config</servlet-name>
+		<servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+		<init-param>
+			<param-name>api.version</param-name>
+			<param-value>1.0.0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>swagger.api.basepath</param-name>
+			<!-- <param-value>http://localhost:8090/jersey-spring-rest/api</param-value> -->
+			<param-value>/jersey-spring-rest-swagger/api</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+
+	<servlet-mapping>
+		<servlet-name>com.ddlab.rest.resources.ApplicationPkgs</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+</web-app>
